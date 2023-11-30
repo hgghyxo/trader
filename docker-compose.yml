@@ -1,3 +1,5 @@
 services:
   hello-world:
     image: hello-world
+  hello-world2:
+    image: hello-world
