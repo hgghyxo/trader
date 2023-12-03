@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { db } from '$lib/firebase'
   import { onSnapshot, collection, query, orderBy } from 'firebase/firestore'
 

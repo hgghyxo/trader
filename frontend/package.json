@@ -27,7 +27,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@binance/connector": "^3.0.0",
+		"@binance/connector-typescript": "^0.3.4",
 		"firebase": "^10.7.0"
 	}
 }

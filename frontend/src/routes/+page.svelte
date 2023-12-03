@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import Settings from '../lib/Settings.svelte'
 	import { db } from '$lib/firebase'
 	import { onSnapshot, collection, limit, query, orderBy } from 'firebase/firestore'
@@ -8,9 +8,9 @@
 	export let data
 
 	let tab = 1
-	let total
-	let BNB
-	let USDT
+	let total:number
+	let BNB:number
+	let USDT:number
 	let totalByDate = Object()
 	let ordersByDate = Object()
 	let totalBySymbol = Object()
@@ -102,9 +102,9 @@
 	]
 </script>
 
-<main class=" bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-400">
+<main class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-400">
 	<nav class="w-full border-gray-200 p-2.5 px-2">
-		<div class="mt-4 flex flex-row rounded-lg border border-gray-100 bg-gray-50 p-4 text-sm dark:border-gray-700 dark:bg-gray-800 md:mt-0">
+		<div class=" flex flex-row rounded-lg border border-gray-100 bg-gray-50 p-4 text-sm dark:border-gray-700 dark:bg-gray-800 md:mt-0">
 
 				<a href="https://www.binance.com/en/my/wallet/account/main" target="_blank" rel="noreferrer" class=" mp-0 block bg-transparent p-2 hover:text-blue-600"> Account</a>
         <div class="m-auto"></div>

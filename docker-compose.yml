@@ -7,3 +7,5 @@ services:
       - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
+  test:
+    image: hello-world
