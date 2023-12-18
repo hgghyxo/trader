@@ -5,17 +5,19 @@
 	import OpenOrders from '../lib/OpenOrders.svelte'
 	import TabButton from '$lib/TabButton.svelte'
 	import '../app.css'
+	import BannedSymbols from '$lib/bannedSymbols.svelte'
 	export let data
 
-	let tab = 1
-	let total:number
-	let BNB:number
-	let USDT:number
+	let tab = 5
+	let total: number
+	let BNB: number
+	let USDT: number
+	let BUSD: number
 	let totalByDate = Object()
 	let ordersByDate = Object()
 	let totalBySymbol = Object()
 	let ordersBySymbol = Object()
-	let orderHistory = []
+	let orderHistory: any = []
 
 	const orderHistory_Ref = collection(db, 'orderHistory')
 	const q = query(orderHistory_Ref, orderBy('timestamp', 'desc'), limit(100))
@@ -31,6 +33,7 @@
 		total = 0
 		BNB = 0
 		USDT = 0
+		BUSD = 0
 
 		data.assets.forEach((asset) => {
 			total = total + Number(asset.btcValuation)
@@ -83,13 +86,13 @@
 		})
 	}
 
-	function roundFloat(number, x = 2) {
+	function roundFloat(number: any, x = 2) {
 		return Number.parseFloat(number).toFixed(x)
 	}
-	function converToDate(date) {
+	function converToDate(date: string) {
 		return new Date(date).toLocaleDateString('hu-HU')
 	}
-	function converToTime(date) {
+	function converToTime(date: string) {
 		return new Date(date).toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit' })
 	}
 
@@ -102,76 +105,81 @@
 	]
 </script>
 
-<main class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-400">
-	<nav class="w-full border-gray-200 p-2.5 px-2">
-		<div class=" flex flex-row rounded-lg border border-gray-100 bg-gray-50 p-4 text-sm dark:border-gray-700 dark:bg-gray-800 md:mt-0">
-
+<div class="min-w-fit bg-white text-gray-900 dark:bg-gray-900 dark:text-white">
+	<main class="mx-auto w-fit sm:min-w-[1280px]">
+		<nav class="w-full border-gray-200 p-2.5 px-2">
+			<div class=" flex flex-row rounded-lg border border-gray-100 bg-gray-50 p-4 text-sm dark:border-gray-700 dark:bg-gray-800 md:mt-0">
 				<a href="https://www.binance.com/en/my/wallet/account/main" target="_blank" rel="noreferrer" class=" mp-0 block bg-transparent p-2 hover:text-blue-600"> Account</a>
-        <div class="m-auto"></div>
-        <div class="p-2 ">Total ${roundFloat(total * data.BTCapi.price)}</div>
-        <div class="p-2 text-green-600">USDT ${roundFloat(USDT)}</div>
+				<div class="m-auto"></div>
+				<div class="p-2">Total ${roundFloat(total * data.BTCapi.price)}</div>
+				<div class="p-2 text-green-600">USDT ${roundFloat(USDT)}</div>
+			</div>
+		</nav>
 
-    </div>
-	</nav>
+		<TabButton {options} bind:tab></TabButton>
 
-	<TabButton {options} bind:tab></TabButton>
+		<section class="px-4" class:hidden={tab !== 5}>
+			<Settings />
+			<BannedSymbols />
+		</section>
 
-	<section class="flex px-4" class:hidden={tab !== 5}><Settings /></section>
+		<section class="block px-4" class:hidden={tab !== 1}>
+			<h1 class="py-2 text-xl font-bold">Transactions by Date:</h1>
+			{#each Object.entries(ordersByDate) as [date, orders]}
+				<h3 class="py-2 font-bold {totalByDate[date] > 0 ? 'text-green-600' : 'text-red-600'}">
+					{date} (${roundFloat(totalByDate[date])}):
+				</h3>
 
-	<section class="px-4 block" class:hidden={tab !== 1}>
-		<h1 class="py-2 text-xl font-bold">Transactions by Date:</h1>
-		{#each Object.entries(ordersByDate) as [date, orders]}
-			<h3 class="py-2 font-bold {totalByDate[date] > 0 ? 'text-green-600' : 'text-red-600'}">
-				{date} (${roundFloat(totalByDate[date])}):
-			</h3>
-
-			{#each orders as order}
-				<div class="px-2 {order.side == 'BUY' ? 'text-red-600' : 'text-green-600'}">
-					{converToTime(order.transactTime)} -
-					{order.side}
-					{order.type}
-					<a href="https://www.binance.com/en/trade/{order.symbol}" target="_blank" rel="noreferrer">{order.symbol}</a>
-					{order.cummulativeQuoteQty}
-				</div>
+				{#each orders as order}
+					<div class="px-2 {order.side == 'BUY' ? 'text-red-600' : 'text-green-600'}">
+						{converToTime(order.transactTime)} -
+						{order.side}
+						{order.type}
+						<a href="https://www.binance.com/en/trade/{order.symbol}" target="_blank" rel="noreferrer">{order.symbol}</a>
+						{order.cummulativeQuoteQty}
+					</div>
+				{/each}
 			{/each}
-		{/each}
-	</section>
+		</section>
 
-	<section class="px-4 block" class:hidden={tab !== 2}>
-		<h1 class="py-2 text-xl font-bold">Transactions by Symbol:</h1>
-		{#each Object.entries(ordersBySymbol) as [symbol, orders]}
-			<h3 class="py-2 font-bold {totalBySymbol[symbol] > 0 ? 'text-green-600' : 'text-red-600'}">
-				<a href="https://www.binance.com/en/trade/{symbol}" target="_blank" rel="noreferrer">{symbol}</a>
-				(${roundFloat(totalBySymbol[symbol])}):
-			</h3>
+		<section class="block px-4" class:hidden={tab !== 2}>
+			<h1 class="py-2 text-xl font-bold">Transactions by Symbol:</h1>
+			{#each Object.entries(ordersBySymbol) as [symbol, orders]}
+				<h3 class="py-2 font-bold {totalBySymbol[symbol] > 0 ? 'text-green-600' : 'text-red-600'}">
+					<a href="https://www.binance.com/en/trade/{symbol}" target="_blank" rel="noreferrer">{symbol}</a>
+					(${roundFloat(totalBySymbol[symbol])}):
+				</h3>
 
-			{#each orders as order}
-				<div class="px-2 {order.side == 'BUY' ? 'text-red-600' : 'text-green-600'}">
-					{converToDate(order.transactTime)}
-					{order.side}
-					<a href="https://www.binance.com/en/trade/{order.symbol}" target="_blank" rel="noreferrer">{order.symbol}</a>
-					{order.cummulativeQuoteQty}
-				</div>
+				{#each orders as order}
+					<div class="px-2 {order.side == 'BUY' ? 'text-red-600' : 'text-green-600'}">
+						{converToDate(order.transactTime)}
+						{order.side}
+						<a href="https://www.binance.com/en/trade/{order.symbol}" target="_blank" rel="noreferrer">{order.symbol}</a>
+						{order.cummulativeQuoteQty}
+					</div>
+				{/each}
 			{/each}
-		{/each}
-	</section>
+		</section>
 
-	<section class="px-4 block" class:hidden={tab !== 3}>
-		<OpenOrders />
-	</section>
+		<section class="block px-4" class:hidden={tab !== 3}>
+			<OpenOrders />
+		</section>
 
-	<section class="px-4 block" class:hidden={tab !== 4}>
-		<div class="py-2 text-xl font-bold">Current Assets:</div>
-		<div class="text-lg">Total ${roundFloat(total * data.BTCapi.price)}</div>
-		<div class="mb-1 text-xs">
-			<div class="text-green-600">USDT ${roundFloat(USDT)}</div>
-			<div class={BNB > 1 ? 'text-green-600' : 'text-red-600'}>BNB ${roundFloat(BNB)}</div>
-		</div>
-		{#each Object.entries(data.assets) as [key, row]}
-			<p>
-				{Number(key) + 1})
-				<a href="https://www.binance.com/en/trade/{row.asset}USDT" target="_blank" rel="noreferrer">{row.asset}</a>: ${roundFloat(row.btcValuation * data.BTCapi.price)}
-			</p>
-		{/each}
-	</section>
-</main>
+		<section class="block px-4" class:hidden={tab !== 4}>
+			<div class="py-2 text-xl font-bold">Current Assets:</div>
+			<div class="text-lg">Total ${roundFloat(total * data.BTCapi.price)}</div>
+			<div class="mb-1 text-xs">
+				<div class="text-green-600">USDT ${roundFloat(USDT)}</div>
+				<div class={BNB > 1 ? 'text-green-600' : 'text-red-600'}>BNB ${roundFloat(BNB)}</div>
+			</div>
+			{#each Object.entries(data.assets) as [key, row]}
+				<p>
+					{Number(key) + 1})
+					<a href="https://www.binance.com/en/trade/{row.asset}USDT" target="_blank" rel="noreferrer">{row.asset}</a>: ${roundFloat(row.btcValuation * data.BTCapi.price)}
+				</p>
+			{/each}
+		</section>
+
+		<div class="p-56"></div>
+	</main>
+</div>

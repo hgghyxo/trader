@@ -1,11 +1,9 @@
 services:
-  # frontend:
-  #   build:
-  #     context: frontend
-  #     dockerfile: frontend/dockerfile
-  #   environment:
-  #     - TZ=${TZ}
-  #     - PUID=${PUID}
-  #     - PGID=${PGID}
-  test:
-    image: hello-world
+  frontend:
+    build:
+      context: frontend
+      dockerfile: frontend/dockerfile
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
