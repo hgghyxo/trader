@@ -6,9 +6,10 @@
 	import TabButton from '$lib/TabButton.svelte'
 	import '../app.css'
 	import BannedSymbols from '$lib/bannedSymbols.svelte'
+
 	export let data
 
-	let tab = 5
+	let tab = 4
 	let total: number
 	let BNB: number
 	let USDT: number
@@ -167,17 +168,43 @@
 
 		<section class="block px-4" class:hidden={tab !== 4}>
 			<div class="py-2 text-xl font-bold">Current Assets:</div>
-			<div class="text-lg">Total ${roundFloat(total * data.BTCapi.price)}</div>
-			<div class="mb-1 text-xs">
-				<div class="text-green-600">USDT ${roundFloat(USDT)}</div>
+
+			<div class="flex">
+				<div class="mr-10 text-lg">Total ${roundFloat(total * data.BTCapi.price)}</div>
+				<div class="mr-10 text-green-600">USDT ${roundFloat(USDT)}</div>
 				<div class={BNB > 1 ? 'text-green-600' : 'text-red-600'}>BNB ${roundFloat(BNB)}</div>
 			</div>
-			{#each Object.entries(data.assets) as [key, row]}
-				<p>
-					{Number(key) + 1})
-					<a href="https://www.binance.com/en/trade/{row.asset}USDT" target="_blank" rel="noreferrer">{row.asset}</a>: ${roundFloat(row.btcValuation * data.BTCapi.price)}
-				</p>
-			{/each}
+
+			<table class="w-full">
+				<th class="text-left">No</th>
+				<th class="text-left">Asset</th>
+				<th class="text-left">Free</th>
+				<th class="text-left">Locked</th>
+				<th class="text-left">Freeze</th>
+				<th class="text-left">Withdrawing</th>
+				<th class="text-left">Ipoable</th>
+				<th class="text-left">Value in USD</th>
+				<th></th>
+				<th></th>
+				<th></th>
+
+
+				{#each Object.entries(data.assets) as [key, row]}
+					<tr>
+						<td>{Number(key) + 1})</td>
+						<td><a href="https://www.binance.com/en/trade/{row.asset}USDT" target="_blank" rel="noreferrer">{row.asset}</a></td>
+						<td>{row.free}</td>
+						<td>{row.locked}</td>
+						<td>{row.freeze}</td>
+						<td>{row.withdrawing}</td>
+						<td>{row.ipoable}</td>
+						<td> ${roundFloat(row.btcValuation * data.BTCapi.price)}</td>
+						<td><input class="rounded border" value="" /></td>
+						<td><button class="w-20 flex-shrink-0 rounded border p-2 hover:bg-green-600 hover:text-white dark:border-violet-500">Buy</button></td>
+						<td><button class="w-20 flex-shrink-0 rounded border p-2 hover:bg-red-600 hover:text-white dark:border-violet-500">Sell</button></td>
+					</tr>
+				{/each}
+			</table>
 		</section>
 
 		<div class="p-56"></div>
