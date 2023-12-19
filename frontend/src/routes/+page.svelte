@@ -9,7 +9,7 @@
 
 	export let data
 
-	let tab = 4
+	let tab = 3
 	let total: number
 	let BNB: number
 	let USDT: number
@@ -163,7 +163,7 @@
 		</section>
 
 		<section class="block px-4" class:hidden={tab !== 3}>
-			<OpenOrders />
+			<OpenOrders assets={data.assets}/>
 		</section>
 
 		<section class="block px-4" class:hidden={tab !== 4}>
@@ -176,18 +176,19 @@
 			</div>
 
 			<table class="w-full">
-				<th class="text-left">No</th>
-				<th class="text-left">Asset</th>
-				<th class="text-left">Free</th>
-				<th class="text-left">Locked</th>
-				<th class="text-left">Freeze</th>
-				<th class="text-left">Withdrawing</th>
-				<th class="text-left">Ipoable</th>
-				<th class="text-left">Value in USD</th>
-				<th></th>
-				<th></th>
-				<th></th>
-
+				<tr>
+					<th class="text-left">No</th>
+					<th class="text-left">Asset</th>
+					<th class="text-left">Free</th>
+					<th class="text-left">Locked</th>
+					<th class="text-left">Freeze</th>
+					<th class="text-left">Withdrawing</th>
+					<th class="text-left">Ipoable</th>
+					<th class="text-left">Value in USD</th>
+					<th></th>
+					<th></th>
+					<th></th>
+				</tr>
 
 				{#each Object.entries(data.assets) as [key, row]}
 					<tr>

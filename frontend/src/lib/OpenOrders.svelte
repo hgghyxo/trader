@@ -1,15 +1,18 @@
 <script lang="ts">
 	import { db } from '$lib/firebase'
 	import { onSnapshot, collection, query, orderBy } from 'firebase/firestore'
+	import type { OpenOrder, Assets } from '$lib/types'
 
-	let currentOpenOrders = []
+	export let assets: Assets[] = []
+
+	let currentOpenOrders: OpenOrder[] = []
 
 	const q = query(collection(db, 'currentOpenOrders'), orderBy('timestamp', 'desc'))
 
 	onSnapshot(q, (querrySnapshot) => {
-		const data = []
+		const data: OpenOrder[] = []
 		querrySnapshot.forEach((doc) => {
-			data.push(doc.data())
+			data.push(doc.data() as OpenOrder)
 		})
 		currentOpenOrders = data
 	})
