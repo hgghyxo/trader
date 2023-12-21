@@ -1,12 +1,13 @@
 <script lang="ts">
-	import Settings from '../lib/Settings.svelte'
-	import { db } from '$lib/firebase'
-	import { onSnapshot, collection, limit, query, orderBy } from 'firebase/firestore'
-	import OpenOrders from '../lib/OpenOrders.svelte'
+	import CurrentAssets from '$lib/CurrentAssets.svelte'
+	import Settings from '$lib/Settings.svelte'
 	import TabButton from '$lib/TabButton.svelte'
-	import '../app.css'
 	import BannedSymbols from '$lib/bannedSymbols.svelte'
-
+	import { db } from '$lib/firebase'
+	import { converToDate, converToTime, roundFloat } from '$lib/functions'
+	import { collection, limit, onSnapshot, orderBy, query } from 'firebase/firestore'
+	import '../app.css'
+	import OpenOrders from '$lib/OpenOrders.svelte'
 	export let data
 
 	let tab = 3
@@ -87,16 +88,6 @@
 		})
 	}
 
-	function roundFloat(number: any, x = 2) {
-		return Number.parseFloat(number).toFixed(x)
-	}
-	function converToDate(date: string) {
-		return new Date(date).toLocaleDateString('hu-HU')
-	}
-	function converToTime(date: string) {
-		return new Date(date).toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit' })
-	}
-
 	const options = [
 		{ title: 'Transactions by Date', value: 1 },
 		{ title: 'Transactions by Symbol', value: 2 },
@@ -163,49 +154,11 @@
 		</section>
 
 		<section class="block px-4" class:hidden={tab !== 3}>
-			<OpenOrders assets={data.assets}/>
+			<OpenOrders assets={data.assets} BTCapi={data.BTCapi} />
 		</section>
 
 		<section class="block px-4" class:hidden={tab !== 4}>
-			<div class="py-2 text-xl font-bold">Current Assets:</div>
-
-			<div class="flex">
-				<div class="mr-10 text-lg">Total ${roundFloat(total * data.BTCapi.price)}</div>
-				<div class="mr-10 text-green-600">USDT ${roundFloat(USDT)}</div>
-				<div class={BNB > 1 ? 'text-green-600' : 'text-red-600'}>BNB ${roundFloat(BNB)}</div>
-			</div>
-
-			<table class="w-full">
-				<tr>
-					<th class="text-left">No</th>
-					<th class="text-left">Asset</th>
-					<th class="text-left">Free</th>
-					<th class="text-left">Locked</th>
-					<th class="text-left">Freeze</th>
-					<th class="text-left">Withdrawing</th>
-					<th class="text-left">Ipoable</th>
-					<th class="text-left">Value in USD</th>
-					<th></th>
-					<th></th>
-					<th></th>
-				</tr>
-
-				{#each Object.entries(data.assets) as [key, row]}
-					<tr>
-						<td>{Number(key) + 1})</td>
-						<td><a href="https://www.binance.com/en/trade/{row.asset}USDT" target="_blank" rel="noreferrer">{row.asset}</a></td>
-						<td>{row.free}</td>
-						<td>{row.locked}</td>
-						<td>{row.freeze}</td>
-						<td>{row.withdrawing}</td>
-						<td>{row.ipoable}</td>
-						<td> ${roundFloat(row.btcValuation * data.BTCapi.price)}</td>
-						<td><input class="rounded border" value="" /></td>
-						<td><button class="w-20 flex-shrink-0 rounded border p-2 hover:bg-green-600 hover:text-white dark:border-violet-500">Buy</button></td>
-						<td><button class="w-20 flex-shrink-0 rounded border p-2 hover:bg-red-600 hover:text-white dark:border-violet-500">Sell</button></td>
-					</tr>
-				{/each}
-			</table>
+			<CurrentAssets assets={data.assets} {BNB} {total} {USDT} BTCapi={data.BTCapi} />
 		</section>
 
 		<div class="p-56"></div>
