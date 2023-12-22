@@ -25,3 +25,5 @@ export type MergedOrder = {
 	symbol: string
 	timestamp: Timestamp
 }
+
+export type TabOptions = { value: number; title: string }

@@ -3,14 +3,16 @@
 	import Settings from '$lib/Settings.svelte'
 	import TabButton from '$lib/TabButton.svelte'
 	import BannedSymbols from '$lib/bannedSymbols.svelte'
+	import { invalidateAll } from '$app/navigation'
 	import { db } from '$lib/firebase'
 	import { converToDate, converToTime, roundFloat } from '$lib/functions'
 	import { collection, limit, onSnapshot, orderBy, query } from 'firebase/firestore'
 	import '../app.css'
 	import OpenOrders from '$lib/OpenOrders.svelte'
 	export let data
+	import { onMount } from 'svelte'
 
-	let tab = 3
+	let tab = 1
 	let total: number
 	let BNB: number
 	let USDT: number
@@ -20,9 +22,16 @@
 	let totalBySymbol = Object()
 	let ordersBySymbol = Object()
 	let orderHistory: any = []
+	let exchangeInfo
 
 	const orderHistory_Ref = collection(db, 'orderHistory')
 	const q = query(orderHistory_Ref, orderBy('timestamp', 'desc'), limit(100))
+
+	onMount(() => {
+		if (localStorage.getItem('tab')) {
+			tab = Number(localStorage.getItem('tab'))
+		}
+	})
 
 	onSnapshot(q, (snapshot) => {
 		orderHistory = []
@@ -95,25 +104,25 @@
 		{ title: 'Current Assets', value: 4 },
 		{ title: 'Settings', value: 5 }
 	]
+
+	function reset() {
+		invalidateAll()
+	}
 </script>
 
-<div class="min-w-fit bg-white text-gray-900 dark:bg-gray-900 dark:text-white">
+<div class="min-w-fit bg-white text-lg text-gray-900 dark:bg-gray-900 dark:text-white">
 	<main class="mx-auto w-fit sm:min-w-[1280px]">
 		<nav class="w-full border-gray-200 p-2.5 px-2">
 			<div class=" flex flex-row rounded-lg border border-gray-100 bg-gray-50 p-4 text-sm dark:border-gray-700 dark:bg-gray-800 md:mt-0">
 				<a href="https://www.binance.com/en/my/wallet/account/main" target="_blank" rel="noreferrer" class=" mp-0 block bg-transparent p-2 hover:text-blue-600"> Account</a>
+				<button class="ml-6 p-2 text-blue-600 underline-offset-2 hover:underline" on:click={reset}>Reload</button>
 				<div class="m-auto"></div>
 				<div class="p-2">Total ${roundFloat(total * data.BTCapi.price)}</div>
 				<div class="p-2 text-green-600">USDT ${roundFloat(USDT)}</div>
 			</div>
 		</nav>
 
-		<TabButton {options} bind:tab></TabButton>
-
-		<section class="px-4" class:hidden={tab !== 5}>
-			<Settings />
-			<BannedSymbols />
-		</section>
+		<TabButton tabOptions={options} bind:tab></TabButton>
 
 		<section class="block px-4" class:hidden={tab !== 1}>
 			<h1 class="py-2 text-xl font-bold">Transactions by Date:</h1>
@@ -153,12 +162,17 @@
 			{/each}
 		</section>
 
-		<section class="block px-4" class:hidden={tab !== 3}>
+		<section class="px-4" class:hidden={tab !== 3}>
 			<OpenOrders assets={data.assets} BTCapi={data.BTCapi} />
 		</section>
 
-		<section class="block px-4" class:hidden={tab !== 4}>
+		<section class=" px-4" class:hidden={tab !== 4}>
 			<CurrentAssets assets={data.assets} {BNB} {total} {USDT} BTCapi={data.BTCapi} />
+		</section>
+
+		<section class="px-4" class:hidden={tab !== 5}>
+			<Settings />
+			<BannedSymbols />
 		</section>
 
 		<div class="p-56"></div>

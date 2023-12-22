@@ -6,9 +6,13 @@ export async function load({ fetch }) {
 	async function getBTCapi(): Promise<{ mins: number; price: number; closeTime: number }> {
 		return await fetch('https://api.binance.com/api/v3/avgPrice?symbol=BTCUSDT').then((d) => d.json())
 	}
+	async function getExchangeInfo(): Promise<any> {
+		return await fetch('/api/exchangeInfo').then((d) => d.json())
+	}
 
 	return {
 		assets: getAssets(),
-		BTCapi: getBTCapi()
+		BTCapi: getBTCapi(),
+		exchangeInfo: getExchangeInfo()
 	}
 }
