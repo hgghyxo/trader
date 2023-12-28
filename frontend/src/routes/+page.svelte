@@ -124,7 +124,7 @@
 
 		<TabButton tabOptions={options} bind:tab></TabButton>
 
-		<section class="block px-4" class:hidden={tab !== 1}>
+		<!-- <section class="block px-4" class:hidden={tab !== 1}>
 			<h1 class="py-2 text-xl font-bold">Transactions by Date:</h1>
 			{#each Object.entries(ordersByDate) as [date, orders]}
 				<h3 class="py-2 font-bold {totalByDate[date] > 0 ? 'text-green-600' : 'text-red-600'}">
@@ -141,9 +141,9 @@
 					</div>
 				{/each}
 			{/each}
-		</section>
+		</section> -->
 
-		<section class="block px-4" class:hidden={tab !== 2}>
+		<!-- <section class="block px-4" class:hidden={tab !== 2}>
 			<h1 class="py-2 text-xl font-bold">Transactions by Symbol:</h1>
 			{#each Object.entries(ordersBySymbol) as [symbol, orders]}
 				<h3 class="py-2 font-bold {totalBySymbol[symbol] > 0 ? 'text-green-600' : 'text-red-600'}">
@@ -160,7 +160,7 @@
 					</div>
 				{/each}
 			{/each}
-		</section>
+		</section> -->
 
 		<section class="px-4" class:hidden={tab !== 3}>
 			<OpenOrders assets={data.assets} BTCapi={data.BTCapi} />
@@ -174,7 +174,7 @@
 			<Settings />
 			<BannedSymbols />
 		</section>
-
+í
 		<div class="p-56"></div>
 	</main>
 </div>

@@ -18,7 +18,6 @@
 			const asset = assets.filter((a) => a.asset == data.symbol.slice(0, -4))
 			const temp2 = { ...data, ...asset[0] }
 
-
 			temp.push(temp2)
 		})
 		MergedOpenOrders = temp
@@ -37,7 +36,7 @@
 		<tr>
 			<td><a class="text-blue-600 hover:underline" href="https://www.binance.com/en/trade/{order.symbol}" target="_blank" rel="noreferrer">{order.symbol}</a></td>
 			<td>{order.quantity}</td>
-			<td>{(order.buyPrice)} </td>
+			<td>{order.buyPrice} </td>
 
 			<td>{new Date(order.timestamp.toDate()).toDateString()}</td>
 		</tr>
