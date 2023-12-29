@@ -1,48 +1,48 @@
 <script lang="ts">
-	import { db } from './firebase'
-	import { doc, collection, onSnapshot, deleteDoc, Timestamp, addDoc, orderBy, query } from 'firebase/firestore'
+import { db } from './firebase'
+import { doc, collection, onSnapshot, deleteDoc, Timestamp, addDoc, orderBy, query } from 'firebase/firestore'
 
-	let bannedSymbols: { symbol: string; timestamp: string; id: string; expireDate: Date; manual?: boolean }[] = []
-	const bannedSymbolsRef = collection(db, '/bannedSymbols')
-	const q = query(bannedSymbolsRef, orderBy('timestamp'))
-	const settingsRef = doc(db, 'backend/settings')
-	let hoursToBanSymbols: number
+let bannedSymbols: { symbol: string; timestamp: string; id: string; expireDate: Date; manual?: boolean }[] = []
+const bannedSymbolsRef = collection(db, '/bannedSymbols')
+const q = query(bannedSymbolsRef, orderBy('timestamp'))
+const settingsRef = doc(db, 'backend/settings')
+let hoursToBanSymbols: number
 
-	onSnapshot(settingsRef, (doc) => {
-		const settings = doc.data()
-		if (settings) {
-			hoursToBanSymbols = settings.hoursToBanSymbols
-		}
-	})
-
-	onSnapshot(q, (querySnapshot) => {
-		bannedSymbols = []
-		querySnapshot.forEach((doc) => {
-			const bannedListSnapshot = doc.data()
-			bannedListSnapshot.id = doc.id
-			const DateFromTimestamp = bannedListSnapshot.timestamp.toDate()
-			bannedListSnapshot.expireDate = new Date(DateFromTimestamp.setHours(DateFromTimestamp.getHours() + hoursToBanSymbols)).toLocaleString('hu-HU', { dateStyle: 'short', timeStyle: 'short' })
-			//@ts-ignore
-			bannedSymbols.push(bannedListSnapshot)
-		})
-		bannedSymbols = bannedSymbols
-	})
-
-	const deleteBannedSymbol = (id: string) => {
-		deleteDoc(doc(db, 'bannedSymbols', id))
-		return null
+onSnapshot(settingsRef, (doc) => {
+	const settings = doc.data()
+	if (settings) {
+		hoursToBanSymbols = settings.hoursToBanSymbols
 	}
+})
 
-	let symbol: string,
-		expiryDate: string = '2030-01-01'
+onSnapshot(q, (querySnapshot) => {
+	bannedSymbols = []
+	querySnapshot.forEach((doc) => {
+		const bannedListSnapshot = doc.data()
+		bannedListSnapshot.id = doc.id
+		const DateFromTimestamp = bannedListSnapshot.timestamp.toDate()
+		bannedListSnapshot.expireDate = new Date(DateFromTimestamp.setHours(DateFromTimestamp.getHours() + hoursToBanSymbols)).toLocaleString('hu-HU', { dateStyle: 'short', timeStyle: 'short' })
+		//@ts-ignore
+		bannedSymbols.push(bannedListSnapshot)
+	})
+	bannedSymbols = bannedSymbols
+})
 
-	const addBannedSymbol = () => {
-		addDoc(bannedSymbolsRef, {
-			symbol: symbol.toLocaleUpperCase(),
-			timestamp: Timestamp.fromDate(new Date(expiryDate)),
-			manual: true
-		})
-	}
+const deleteBannedSymbol = (id: string) => {
+	deleteDoc(doc(db, 'bannedSymbols', id))
+	return null
+}
+
+let symbol: string,
+	expiryDate: string = '2030-01-01'
+
+const addBannedSymbol = () => {
+	addDoc(bannedSymbolsRef, {
+		symbol: symbol.toLocaleUpperCase(),
+		timestamp: Timestamp.fromDate(new Date(expiryDate)),
+		manual: true
+	})
+}
 </script>
 
 <h1 class="pt-6 text-2xl font-bold">Banned Symbols:</h1>

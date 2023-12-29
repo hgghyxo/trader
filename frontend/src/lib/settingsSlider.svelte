@@ -1,9 +1,9 @@
 <script lang="ts">
-	export let name: string,
-		min: string,
-		max: string,
-		step: string = '1',
-		value: any
+	export let name: string
+	export let min: string
+	export let max: string
+	export let step: string = '1'
+	export let value: number
 </script>
 
 <div class="mb-2">

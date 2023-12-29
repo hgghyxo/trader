@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { db } from '$lib/firebase'
-	import { roundFloat } from '$lib/functions'
+	import { roundFloatWithPrecision } from '$lib/functions'
 	import type { Assets, BTCapiResponse, MergedOrder, OpenOrder } from '$lib/types'
 	import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 	export let assets: Assets[] = []
@@ -28,6 +28,7 @@
 <table class="w-full">
 	<tr>
 		<th class="text-left">Symbol</th>
+		<th class="text-left">Asset</th>
 		<th class="text-left">Tracked</th>
 		<th class="text-left">Buy Price</th>
 		<th class="text-left">Timestamp</th>
@@ -35,6 +36,7 @@
 	{#each MergedOpenOrders as order}
 		<tr>
 			<td><a class="text-blue-600 hover:underline" href="https://www.binance.com/en/trade/{order.symbol}" target="_blank" rel="noreferrer">{order.symbol}</a></td>
+			<td>{order.asset}</td>
 			<td>{order.quantity}</td>
 			<td>{order.buyPrice} </td>
 

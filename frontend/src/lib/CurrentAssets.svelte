@@ -3,15 +3,15 @@
 	export let assets: Assets[]
 	export let BNB: number, total: number, USDT: number
 	export let BTCapi: BTCapiResponse
-	import { roundFloat } from '$lib/functions'
+	import { roundFloatWithPrecision } from '$lib/functions'
 </script>
 
 <div class="py-2 text-xl font-bold">Current Assets:</div>
 
 <div class="flex">
-	<div class="mr-10 text-lg">Total ${roundFloat(total * BTCapi.price)}</div>
-	<div class="mr-10 text-green-600">USDT ${roundFloat(USDT)}</div>
-	<div class={BNB > 1 ? 'text-green-600' : 'text-red-600'}>BNB ${roundFloat(BNB)}</div>
+	<div class="mr-10 text-lg">Total ${roundFloatWithPrecision(total * BTCapi.price)}</div>
+	<div class="mr-10 text-green-600">USDT ${roundFloatWithPrecision(USDT)}</div>
+	<div class={BNB > 1 ? 'text-green-600' : 'text-red-600'}>BNB ${roundFloatWithPrecision(BNB)}</div>
 </div>
 
 <table class="w-full">
@@ -38,7 +38,7 @@
 			<td>{row.freeze}</td>
 			<td>{row.withdrawing}</td>
 			<td>{row.ipoable}</td>
-			<td> ${roundFloat(row.btcValuation * BTCapi.price)}</td>
+			<td> ${roundFloatWithPrecision(row.btcValuation * BTCapi.price)}</td>
 			<td><input class="rounded border" value="" /></td>
 			<td><button class="w-20 flex-shrink-0 rounded border p-2 hover:bg-green-600 hover:text-white dark:border-violet-500">Buy</button></td>
 			<td><button class="w-20 flex-shrink-0 rounded border p-2 hover:bg-red-600 hover:text-white dark:border-violet-500">Sell</button></td>
