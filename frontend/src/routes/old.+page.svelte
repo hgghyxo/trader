@@ -167,7 +167,7 @@
 		</section>
 
 		<section class=" px-4" class:hidden={tab !== 4}>
-			<CurrentAssets assets={data.assets} {BNB} {total} {USDT} BTCapi={data.BTCapi} />
+			<CurrentAssets assets={data.assets} BNBinUSD={BNB} {total} {USDT} BTCapi={data.BTCapi} />
 		</section>
 
 		<section class="px-4" class:hidden={tab !== 5}>
