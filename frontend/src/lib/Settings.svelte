@@ -74,7 +74,7 @@
 	<form on:change={update} class="">
 		<SettingsSlider name="minimalBuyAmmountInUSD" min="10" max="100" value={minimalBuyAmmountInUSD} />
 		<SettingsSlider name="minimumKeepAmmount" min="0" max="999" value={minimumKeepAmmount} />
-		<SettingsSlider name="sellMargin" min="0.01" max="1" step="0.01" value={sellMargin} />
+		<SettingsSlider name="sellMargin" min="0.01" max="1" step="0.01" value={sellMargin} customTitle="Sell Margin is at {sellMargin * 100}% now" />
 		<SettingsSlider name="LastHourPricePercentChanged" min="1" max="20" value={LastHourPricePercentChanged} />
 
 		<label class="block">
