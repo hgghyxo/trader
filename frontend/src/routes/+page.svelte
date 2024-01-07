@@ -45,9 +45,9 @@
 	]
 </script>
 
-<div class="min-w-fit select-none bg-white text-lg text-gray-900 dark:bg-gray-900 dark:text-white">
-	<main class="mx-auto w-fit sm:min-w-[1280px]">
-		<nav class="w-full border-gray-200 p-2.5 px-2">
+<div class="select-none bg-white text-lg text-gray-900 dark:bg-gray-900 dark:text-white">
+	<main class="mx-auto sm:min-w-[1280px]">
+		<nav class="w-full border-gray-200 pb-2.5">
 			<div class="flex flex-row rounded-lg border border-gray-100 bg-gray-50 p-4 text-sm dark:border-gray-700 dark:bg-gray-800 md:mt-0">
 				<a href="https://www.binance.com/en/my/wallet/account/main" target="_blank" rel="noreferrer" class=" mp-0 block bg-transparent p-2 hover:text-blue-600"> Account</a>
 				<button class="ml-6 p-2 text-blue-600 underline-offset-2 hover:underline" on:click={reset}>Reload</button>
@@ -60,6 +60,7 @@
 		<TabButton tabOptions={options} bind:tab></TabButton>
 
 		<section class="px-4" class:hidden={tab !== 1}>
+			<h1 class="pt-6 text-2xl font-bold">Order History:</h1>
 			{#each orderHistory as Orders}
 				<p class={Orders.side === 'BUY' ? 'text-red-600' : 'text-green-600'}>
 					{converToDateString(Orders.transactTime)}
@@ -84,6 +85,6 @@
 			<BannedSymbols />
 		</section>
 
-		<div class="p-56"></div>
+		<!-- <div class="py-56"></div> -->
 	</main>
 </div>

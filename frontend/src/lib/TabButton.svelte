@@ -17,9 +17,9 @@ onMount(() => {
 })
 </script>
 
-<div class="m-4 me-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">
+<div class="mb-4 me-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">
 	{#each tabOptions as tabOption}
-		<label class="me-2 inline-block rounded-lg px-4 py-3 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-white" class:active={tab == tabOption.value}>
+		<label class="me-2 inline-block rounded p-1 sm:px-6 sm:py-2 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-white" class:active={tab == tabOption.value}>
 			<input type="radio" name="tab" value={tabOption.value} class="hidden" on:change={saveTab} bind:group={tab} />{tabOption.title}
 		</label>
 	{/each}
