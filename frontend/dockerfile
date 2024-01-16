@@ -1,4 +1,4 @@
-FROM node:18-slim as builder
+FROM node:18-slim
 
 WORKDIR /app
 
@@ -10,17 +10,6 @@ COPY . ./
 
 RUN npm run build
 
-# Run
-FROM node:18-slim as worknode
-
-ENV NODE_ENV=production
-
-WORKDIR /app
-
-COPY --from=builder /app/build ./
-
-COPY package*.json ./
-
-RUN npm ci
+WORKDIR /app/build
 
 CMD ["node", "index.js"]
